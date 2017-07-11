@@ -17,7 +17,7 @@ class Plugin {
 
 	public static function getHooks() {
 		return [
-			//'system.settings' => [__CLASS__, 'getSettings'],
+			'system.settings' => [__CLASS__, 'getSettings'],
 			//'ui.menu' => [__CLASS__, 'getMenu'],
 		];
 	}
@@ -41,8 +41,8 @@ class Plugin {
 
 	public static function getSettings(GenericEvent $event) {
 		$settings = $event->getSubject();
-		$settings->add_text_setting('General', 'Mailchimp', 'abuse_imap_user', 'Mailchimp IMAP User:', 'Mailchimp IMAP Username', ABUSE_IMAP_USER);
-		$settings->add_text_setting('General', 'Mailchimp', 'abuse_imap_pass', 'Mailchimp IMAP Pass:', 'Mailchimp IMAP Password', ABUSE_IMAP_PASS);
+		$settings->add_text_setting('Accounts', 'MailChimp', 'mailchimp_apiid', 'API ID', 'API ID', (defined('MAILCHIMP_APIID') ? MAILCHIMP_APIID : ''));
+		$settings->add_text_setting('Accounts', 'MailChimp', 'mailchimp_listid', 'List ID', 'List ID', (defined('MAILCHIMP_LISTID') ? MAILCHIMP_LISTID : ''));
 	}
 
 }
