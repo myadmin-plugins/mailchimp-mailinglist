@@ -29,6 +29,7 @@ class Plugin {
 		return [
 			'system.settings' => [__CLASS__, 'getSettings'],
 			'account.activated' => [__CLASS__, 'doAccountActivated'],
+			'mailinglist.subscribe' => [__CLASS__, 'doMailinglistSubscribe'],
 			//'ui.menu' => [__CLASS__, 'getMenu'],
 		];
 	}
@@ -46,6 +47,15 @@ class Plugin {
 	/**
 	 * @param \Symfony\Component\EventDispatcher\GenericEvent $event
 	 */
+	public static function doMailinglistSubscribe(GenericEvent $event) {
+		$email = $event->getSubject();
+		if (defined('MAILCHIMP_ENABLE') && MAILCHIMP_ENABLE == 1) {
+			self::doEmailSetup($email);
+		}
+	}
+	/**
+	 * @param \Symfony\Component\EventDispatcher\GenericEvent $event
+	 */
 	public static function getSettings(GenericEvent $event) {
 		$settings = $event->getSubject();
 		$settings->add_dropdown_setting('Accounts', 'MailChimp', 'mailchimp_enable', 'Enable MailChimp', 'Enable/Disable MailChimp Mailing on Account Signup', (defined('MAILCHIMP_ENABLE') ? MAILCHIMP_ENABLE : '0'), ['0', '1'], ['No', 'Yes']);
@@ -56,39 +66,40 @@ class Plugin {
 	/**
 	 * @param int $custid
 	 */
-	public static function doSetup($custid) {
-		myadmin_log('accounts', 'info', "mailchimp_setup($custid) Called", __LINE__, __FILE__);
+	public static function doSetup($accountId) {
+		myadmin_log('accounts', 'info', "mailchimp_setup($accountId) Called", __LINE__, __FILE__);
 		$module = get_module_name('default');
-		$GLOBALS['tf']->accounts->set_db_module($module);
-		$GLOBALS['tf']->history->set_db_module($module);
-		$data = $GLOBALS['tf']->accounts->read($custid);
-		$lid = $data['account_lid'];
-		$contacts = [];
+		$data = $GLOBALS['tf']->accounts->read($accountId);
+		$email = $data['account_lid'];
 		list($first, $last) = explode(' ', $data['name']);
-		/*
-		$contact = array(
-		'email' => $lid,
-		'firstName' => $first,
-		//			'lastName' =>  $last,
-		//			'street' => $data['address'],
-		//			'city' => $data['city'],
-		//			'state' => mb_substr($data['state'], 0, 10),
-		//			'postalCode' => $data['zip'],
-		//			'phone' => $data['phone'],
-		'status' => 'normal',
-		);
-		if (isset($data['company'])) {
-		$contact['business'] = $data['company'];
-		}
-		$contacts[] = $contact;
-		$json = json_encode($contacts);
-		*/
-		$merge_vars = ['FNAME' => $first,'LNAME' => $last,'GROUPINGS' => [['id' => 2249, 'groups' => 'Company News,Special Promotions,Network and Datacenter Updates']]];
+		$merge_vars = [
+			'FNAME' => $first,
+			'LNAME' => $last,
+		];
+		self::doEmailSetup($email, $merge_vars);
+	}
 
+	/**
+	 * @param string $lid
+	 * @param false|array $parrams
+	 */
+	public static function doEmailSetup($email, $params = false) {
+		myadmin_log('accounts', 'info', "mailchimp_setup($email) Called", __LINE__, __FILE__);
+		$contacts = [];
+		$merge_vars = [
+			'GROUPINGS' => [
+				[
+					'id' => 2249,
+					'groups' => 'Company News,Special Promotions,Network and Datacenter Updates'
+				]
+			]
+		];
+		if ($params !== false)
+			$merge_vars = array_merge($merge_vars, $params);
 		$MailChimp = new MailChimp(MAILCHIMP_APIID);
-		$result = $MailChimp->post('lists/'.MAILCHIMP_LISTID.'/members', ['email_address' => $lid, 'status' => 'normal']);
-		myadmin_log('mailchimp', 'info', 'mailchimp->post(lists/'.MAILCHIMP_LISTID.'/members, [email_address => '.$lid.', status => normal]) returned '.json_encode($result), __LINE__, __FILE__);
-		$subscriber_hash = $MailChimp->subscriberHash($lid);
+		$result = $MailChimp->post('lists/'.MAILCHIMP_LISTID.'/members', ['email_address' => $email, 'status' => 'normal']);
+		myadmin_log('mailchimp', 'info', 'mailchimp->post(lists/'.MAILCHIMP_LISTID.'/members, [email_address => '.$email.', status => normal]) returned '.json_encode($result), __LINE__, __FILE__);
+		$subscriber_hash = $MailChimp->subscriberHash($email);
 		$result = $MailChimp->patch('lists/'.MAILCHIMP_LISTID.'/members/'.$subscriber_hash, ['merge_fields' => $merge_vars]);
 		myadmin_log('mailchimp', 'info', 'mailchimp->patch(lists/'.MAILCHIMP_LISTID.'/members/'.$subscriber_hash.', [merge_fields => $merge_vars]) returned '.json_encode($result), __LINE__, __FILE__);
 	}
