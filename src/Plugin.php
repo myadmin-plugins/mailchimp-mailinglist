@@ -39,7 +39,7 @@ class Plugin {
 	public static function doAccountActivated(GenericEvent $event) {
 		$account = $event->getSubject();
 		if (defined('MAILCHIMP_ENABLE') && MAILCHIMP_ENABLE == 1) {
-			self::doSetup($account->getAccountId());
+			self::doSetup($account->getId());
 		}
 	}
 
