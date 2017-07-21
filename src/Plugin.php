@@ -64,7 +64,6 @@ class Plugin {
 	}
 
 	/**
-	 * @param int $custid
 	 */
 	public static function doSetup($accountId) {
 		myadmin_log('accounts', 'info', "mailchimp_setup($accountId) Called", __LINE__, __FILE__);
@@ -80,8 +79,7 @@ class Plugin {
 	}
 
 	/**
-	 * @param string $lid
-	 * @param false|array $parrams
+	 * @param false|array $params
 	 */
 	public static function doEmailSetup($email, $params = false) {
 		myadmin_log('accounts', 'info', "mailchimp_setup($email) Called", __LINE__, __FILE__);
