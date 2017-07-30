@@ -12,7 +12,7 @@ use Symfony\Component\EventDispatcher\GenericEvent;
 class Plugin {
 
 	public static $name = 'Mailchimp Plugin';
-	public static $description = 'Allows handling of Mailchimp emails and honeypots';
+	public static $description = 'Allows handling of Mailchimp based Mailing List Subscriptions';
 	public static $help = '';
 	public static $type = 'plugin';
 
