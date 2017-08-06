@@ -64,6 +64,7 @@ class Plugin {
 	}
 
 	/**
+	 * @param $accountId
 	 */
 	public static function doSetup($accountId) {
 		myadmin_log('accounts', 'info', "mailchimp_setup($accountId) Called", __LINE__, __FILE__);
@@ -73,13 +74,14 @@ class Plugin {
 		list($first, $last) = explode(' ', $data['name']);
 		$merge_vars = [
 			'FNAME' => $first,
-			'LNAME' => $last,
+			'LNAME' => $last
 		];
 		self::doEmailSetup($email, $merge_vars);
 	}
 
 	/**
-	 * @param false|array $params
+	 * @param                  $email
+	 * @param array|bool|false $params
 	 */
 	public static function doEmailSetup($email, $params = false) {
 		myadmin_log('accounts', 'info', "mailchimp_setup($email) Called", __LINE__, __FILE__);
