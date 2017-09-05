@@ -39,9 +39,8 @@ class Plugin {
 	 */
 	public static function doAccountActivated(GenericEvent $event) {
 		$account = $event->getSubject();
-		if (defined('MAILCHIMP_ENABLE') && MAILCHIMP_ENABLE == 1) {
+		if (defined('MAILCHIMP_ENABLE') && MAILCHIMP_ENABLE == 1)
 			self::doSetup($account->getId());
-		}
 	}
 
 	/**
@@ -49,9 +48,8 @@ class Plugin {
 	 */
 	public static function doMailinglistSubscribe(GenericEvent $event) {
 		$email = $event->getSubject();
-		if (defined('MAILCHIMP_ENABLE') && MAILCHIMP_ENABLE == 1) {
+		if (defined('MAILCHIMP_ENABLE') && MAILCHIMP_ENABLE == 1)
 			self::doEmailSetup($email);
-		}
 	}
 	/**
 	 * @param \Symfony\Component\EventDispatcher\GenericEvent $event
