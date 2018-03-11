@@ -81,7 +81,7 @@ class Plugin {
 	 * @param                  $email
 	 * @param array|bool|false $params
 	 */
-	public static function doEmailSetup($email, $params = false) {
+	public static function doEmailSetup($email, $params = FALSE) {
 		myadmin_log('accounts', 'info', "mailchimp_setup($email) Called", __LINE__, __FILE__);
 		$contacts = [];
 		$merge_vars = [
@@ -92,7 +92,7 @@ class Plugin {
 				]
 			]
 		];
-		if ($params !== false)
+		if ($params !== FALSE)
 			$merge_vars = array_merge($merge_vars, $params);
 		$MailChimp = new MailChimp(MAILCHIMP_APIID);
 		$result = $MailChimp->post('lists/'.MAILCHIMP_LISTID.'/members', ['email_address' => $email, 'status' => 'normal']);
