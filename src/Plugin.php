@@ -9,8 +9,8 @@ use Symfony\Component\EventDispatcher\GenericEvent;
  *
  * @package Detain\MyAdminMailchimp
  */
-class Plugin {
-
+class Plugin
+{
 	public static $name = 'Mailchimp Plugin';
 	public static $description = 'Allows handling of Mailchimp based Mailing List Subscriptions';
 	public static $help = '';
@@ -19,13 +19,15 @@ class Plugin {
 	/**
 	 * Plugin constructor.
 	 */
-	public function __construct() {
+	public function __construct()
+	{
 	}
 
 	/**
 	 * @return array
 	 */
-	public static function getHooks() {
+	public static function getHooks()
+	{
 		return [
 			'system.settings' => [__CLASS__, 'getSettings'],
 			'account.activated' => [__CLASS__, 'doAccountActivated'],
@@ -37,24 +39,29 @@ class Plugin {
 	/**
 	 * @param \Symfony\Component\EventDispatcher\GenericEvent $event
 	 */
-	public static function doAccountActivated(GenericEvent $event) {
+	public static function doAccountActivated(GenericEvent $event)
+	{
 		$account = $event->getSubject();
-		if (defined('MAILCHIMP_ENABLE') && MAILCHIMP_ENABLE == 1)
+		if (defined('MAILCHIMP_ENABLE') && MAILCHIMP_ENABLE == 1) {
 			self::doSetup($account->getId());
+		}
 	}
 
 	/**
 	 * @param \Symfony\Component\EventDispatcher\GenericEvent $event
 	 */
-	public static function doMailinglistSubscribe(GenericEvent $event) {
+	public static function doMailinglistSubscribe(GenericEvent $event)
+	{
 		$email = $event->getSubject();
-		if (defined('MAILCHIMP_ENABLE') && MAILCHIMP_ENABLE == 1)
+		if (defined('MAILCHIMP_ENABLE') && MAILCHIMP_ENABLE == 1) {
 			self::doEmailSetup($email);
+		}
 	}
 	/**
 	 * @param \Symfony\Component\EventDispatcher\GenericEvent $event
 	 */
-	public static function getSettings(GenericEvent $event) {
+	public static function getSettings(GenericEvent $event)
+	{
 		$settings = $event->getSubject();
 		$settings->add_dropdown_setting('Accounts', 'MailChimp', 'mailchimp_enable', 'Enable MailChimp', 'Enable/Disable MailChimp Mailing on Account Signup', (defined('MAILCHIMP_ENABLE') ? MAILCHIMP_ENABLE : '0'), ['0', '1'], ['No', 'Yes']);
 		$settings->add_text_setting('Accounts', 'MailChimp', 'mailchimp_apiid', 'API ID', 'API ID', (defined('MAILCHIMP_APIID') ? MAILCHIMP_APIID : ''));
@@ -64,7 +71,8 @@ class Plugin {
 	/**
 	 * @param $accountId
 	 */
-	public static function doSetup($accountId) {
+	public static function doSetup($accountId)
+	{
 		myadmin_log('accounts', 'info', "mailchimp_setup($accountId) Called", __LINE__, __FILE__);
 		$module = get_module_name('default');
 		$data = $GLOBALS['tf']->accounts->read($accountId);
@@ -81,7 +89,8 @@ class Plugin {
 	 * @param                  $email
 	 * @param array|bool|false $params
 	 */
-	public static function doEmailSetup($email, $params = FALSE) {
+	public static function doEmailSetup($email, $params = false)
+	{
 		myadmin_log('accounts', 'info', "mailchimp_setup($email) Called", __LINE__, __FILE__);
 		$contacts = [];
 		$merge_vars = [
@@ -92,8 +101,9 @@ class Plugin {
 				]
 			]
 		];
-		if ($params !== FALSE)
+		if ($params !== false) {
 			$merge_vars = array_merge($merge_vars, $params);
+		}
 		$MailChimp = new MailChimp(MAILCHIMP_APIID);
 		$result = $MailChimp->post('lists/'.MAILCHIMP_LISTID.'/members', ['email_address' => $email, 'status' => 'normal']);
 		myadmin_log('mailchimp', 'info', 'mailchimp->post(lists/'.MAILCHIMP_LISTID.'/members, [email_address => '.$email.', status => normal]) returned '.json_encode($result), __LINE__, __FILE__);
