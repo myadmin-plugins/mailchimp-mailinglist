@@ -1,5 +1,5 @@
 {
-	"name": "detain/myadmin-mailchimp-mailinglist",
+	"name": "detain/mailchimp-mailinglist",
 	"type": "myadmin-plugin",
 	"description": "Mailchimp handling plugin for MyAdmin",
 	"keywords": [
