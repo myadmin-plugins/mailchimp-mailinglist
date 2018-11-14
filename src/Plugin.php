@@ -60,12 +60,15 @@ class Plugin
 	/**
 	 * @param \Symfony\Component\EventDispatcher\GenericEvent $event
 	 */
-	public static function getSettings(GenericEvent $event)
-	{
-		$settings = $event->getSubject();
-		$settings->add_dropdown_setting('Accounts', 'MailChimp', 'mailchimp_enable', 'Enable MailChimp', 'Enable/Disable MailChimp Mailing on Account Signup', (defined('MAILCHIMP_ENABLE') ? MAILCHIMP_ENABLE : '0'), ['0', '1'], ['No', 'Yes']);
-		$settings->add_text_setting('Accounts', 'MailChimp', 'mailchimp_apiid', 'API ID', 'API ID', (defined('MAILCHIMP_APIID') ? MAILCHIMP_APIID : ''));
-		$settings->add_text_setting('Accounts', 'MailChimp', 'mailchimp_listid', 'List ID', 'List ID', (defined('MAILCHIMP_LISTID') ? MAILCHIMP_LISTID : ''));
+    public static function getSettings(GenericEvent $event)
+    {
+        /**
+         * @var \MyAdmin\Settings $settings
+         **/
+        $settings = $event->getSubject();
+		$settings->add_dropdown_setting(__('Accounts'), __('MailChimp'), 'mailchimp_enable', __('Enable MailChimp'), __('Enable/Disable MailChimp Mailing on Account Signup'), (defined('MAILCHIMP_ENABLE') ? MAILCHIMP_ENABLE : '0'), ['0', '1'], ['No', 'Yes']);
+		$settings->add_text_setting(__('Accounts'), __('MailChimp'), 'mailchimp_apiid', __('API ID'), __('API ID'), (defined('MAILCHIMP_APIID') ? MAILCHIMP_APIID : ''));
+		$settings->add_text_setting(__('Accounts'), __('MailChimp'), 'mailchimp_listid', __('List ID'), __('List ID'), (defined('MAILCHIMP_LISTID') ? MAILCHIMP_LISTID : ''));
 	}
 
 	/**
