@@ -66,9 +66,9 @@ class Plugin
          * @var \MyAdmin\Settings $settings
          **/
         $settings = $event->getSubject();
-		$settings->add_dropdown_setting(__('Accounts'), __('MailChimp'), 'mailchimp_enable', __('Enable MailChimp'), __('Enable/Disable MailChimp Mailing on Account Signup'), (defined('MAILCHIMP_ENABLE') ? MAILCHIMP_ENABLE : '0'), ['0', '1'], ['No', 'Yes']);
-		$settings->add_text_setting(__('Accounts'), __('MailChimp'), 'mailchimp_apiid', __('API ID'), __('API ID'), (defined('MAILCHIMP_APIID') ? MAILCHIMP_APIID : ''));
-		$settings->add_text_setting(__('Accounts'), __('MailChimp'), 'mailchimp_listid', __('List ID'), __('List ID'), (defined('MAILCHIMP_LISTID') ? MAILCHIMP_LISTID : ''));
+		$settings->add_dropdown_setting(_('Accounts'), _('MailChimp'), 'mailchimp_enable', _('Enable MailChimp'), _('Enable/Disable MailChimp Mailing on Account Signup'), (defined('MAILCHIMP_ENABLE') ? MAILCHIMP_ENABLE : '0'), ['0', '1'], ['No', 'Yes']);
+		$settings->add_text_setting(_('Accounts'), _('MailChimp'), 'mailchimp_apiid', _('API ID'), _('API ID'), (defined('MAILCHIMP_APIID') ? MAILCHIMP_APIID : ''));
+		$settings->add_text_setting(_('Accounts'), _('MailChimp'), 'mailchimp_listid', _('List ID'), _('List ID'), (defined('MAILCHIMP_LISTID') ? MAILCHIMP_LISTID : ''));
 	}
 
 	/**
